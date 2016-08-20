@@ -59,6 +59,15 @@
     </bean>
 
 
+    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+        <property name="attributes">
+            <map>
+                <entry key="libraryFacade" value-ref="libraryFacade"/>
+            </map>
+        </property>
+    </bean>
+
+
     <tx:annotation-driven/>
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate4.HibernateTransactionManager">
@@ -69,6 +78,8 @@
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
         <property name="defaultLocale" value="ru"/>
     </bean>
+
+
 
 
     <mvc:interceptors>
