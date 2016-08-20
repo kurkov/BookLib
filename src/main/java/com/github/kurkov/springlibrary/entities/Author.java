@@ -10,6 +10,13 @@ public class Author {
     private String fio;
     private Date birthday;
 
+    public Author() {
+    }
+
+    public Author(String authorName) {
+        fio = authorName;
+    }
+
     public long getId() {
         return id;
     }
