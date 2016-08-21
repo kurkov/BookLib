@@ -9,24 +9,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 
 /**
- * @author Aleksey Kurkov. Created on 20.08.2016
+ * @author Aleksey Kurkov. Created on 21.08.2016
  */
-@WebServlet(name = "ShowImage", urlPatterns = {"/ShowImage"})
-public class ShowImage extends HttpServlet {
+@WebServlet(name = "PdfContent", urlPatterns = {"/PdfContent"})
+public class PdfContent extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("image/jpeg");
+        response.setContentType("application/pdf; charset=UTF-8");
         OutputStream out = response.getOutputStream();
         try {
-            int index = Integer.valueOf(request.getParameter("index"));
+            long id = Long.valueOf(request.getParameter("id"));
+            Boolean save = Boolean.valueOf(request.getParameter("save"));
+
             LibraryFacade libraryFacade = (LibraryFacade) getServletContext().getAttribute("libraryFacade");
-            byte[] image = libraryFacade.getBooks().get(index).getImage();
-            response.setContentLength(image.length);
-            out.write(image);
+
+            byte[] content = libraryFacade.getContent(id);
+            response.setContentLength(content.length);
+            if (save) {
+                String filename = request.getParameter("filename");
+                response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(filename, "UTF-8") + ".pdf");
+            }
+            out.write(content);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
